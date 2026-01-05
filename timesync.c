@@ -139,7 +139,7 @@ void Apptimer_performtimesync(uint32_t rtc, DateTime *dt)
 /* =========================================
    MAIN
    ========================================= */
-int main()
+void run_timesync_demo(void)
 {
     int choice;
     DateTime dt;
@@ -197,7 +197,7 @@ int main()
         else if (choice == 3) 
         {
             printf("\nReturning to main menu...\n");
-            continue; // Go back to menu
+            break;
         }
         else
         {
@@ -205,5 +205,5 @@ int main()
         }
     }
 
-    return 0;
+
 }

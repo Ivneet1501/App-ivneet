@@ -78,49 +78,47 @@ float convert_voltage_to_temperature(float thermistor_voltage,
 }
  
 /* ------------------ MAIN FUNCTION ------------------ */
-int main(void)
+void run_ntc_demo(void)
 {
     unsigned int adc_value;
     float vref;
     float fixed_resistor;
     float voltage;
     float temperature;
- 
-    while (1) // Infinite loop to keep program running
+    char choice;
+
+    while (1)
     {
-        /* User input */
         printf("\nEnter ADC value (0 - 1023): ");
         scanf("%u", &adc_value);
- 
+
         printf("Enter ADC reference voltage (V): ");
         scanf("%f", &vref);
- 
+
         printf("Enter fixed resistor value (Ohms): ");
         scanf("%f", &fixed_resistor);
- 
-        /* Validation after all inputs */
+
         if (!isValidADCConfig(adc_value, vref, fixed_resistor))
         {
             printf("❌ Invalid input values!\n");
             printf("ADC: 0–1023 | Vref: 0–5V | Resistor: 1k–100k\n");
-            continue; // Ask user to enter again
+            continue;
         }
- 
-        /* Part 1: ADC to Voltage */
+
         voltage = convert_adc_to_voltage(adc_value, vref);
- 
-        /* Part 2: Voltage to Temperature */
-        temperature = convert_voltage_to_temperature(voltage,
-                                                     fixed_resistor
-                                                     ,vref);
- 
-        /* Output */
+        temperature = convert_voltage_to_temperature(voltage, fixed_resistor, vref);
+
         printf("\n----- Results -----\n");
-        printf("ADC Value        : %u\n", adc_value);
-        printf("Voltage (V)      : %.3f V\n", voltage);
-        printf("Temperature (°C) : %.2f °C\n", temperature);
+        printf("ADC Value         : %u\n", adc_value);
+        printf("Voltage (V)       : %.3f V\n", voltage);
+        printf("Temperature (°C)  : %.2f °C\n", temperature);
+
+        printf("\nAnother calculation? (y/n): ");
+        scanf(" %c", &choice);
+        if (choice == 'n' || choice == 'N')
+        {
+            printf("\nReturning to main menu...\n");
+            break;  // exit back to main.c
+        }
     }
- 
-    return 0;
 }
- 

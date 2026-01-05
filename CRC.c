@@ -84,8 +84,8 @@ void create_full_sensor_packet(uint8_t sensor_id,
     packet[11] = calculate_crc8(packet, 11);
 }
 
-/* ================= MAIN ================= */
-int main(void)
+
+void run_crc_demo(void)
 {
     uint8_t packet[12];
     char choice;
@@ -159,5 +159,5 @@ int main(void)
         }
     }
 
-    return 0;
+    
 }
