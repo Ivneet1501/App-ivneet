@@ -1,0 +1,84 @@
+Step 1: Open terminal in LIBRARY folder
+text
+cd "C:\Users\Z0057DWU\Desktop\LIBRARY"
+Step 2: First, remove the int main() from timesync.c
+Edit timesync.c - delete the entire int main() function at the bottom (keep only helper functions like isLeapYear, Apptime_gettimestamp, etc.)
+​
+
+OR rename it to void run_timesync_demo(void) like before.
+//If main() stays → Library unusable (linker conflict)
+//If main() removed → Library works perfectly with any main()
+
+Step 3: Create header file timesync.h
+Create new file timesync.h in same folder:
+// Why create header file?
+// Header file = "Contract" between your library and users
+
+// text
+// timesync.c (private implementation) ←→ timesync.h (public interface) ←→ test.c (user)
+// Without header: User cannot know:
+
+// What functions exist?
+
+// What parameters do they take?
+
+// What data types are needed?
+
+// With header: User gets complete API documentation + compiler checking.
+
+c
+#ifndef TIMESYNC_H
+#define TIMESYNC_H
+
+#include <stdint.h>
+
+typedef struct {
+    uint16_t year;
+    uint8_t month;
+    uint8_t day;
+    uint8_t hour;
+    uint8_t minute;
+    uint8_t second;
+} DateTime;
+
+int isLeapYear(uint16_t year);
+int isValidDateTime(DateTime dt);
+uint32_t Apptime_gettimestamp(DateTime dt);
+void Apptimer_performtimesync(uint32_t rtc, DateTime *dt);
+void run_timesync_demo(void);  // if you kept the demo
+
+#endif
+Step 4: Compile to object file(half compiled machine code)
+bash
+gcc -c timesync.c -o timesync.o
+Result: timesync.o appears (compiled code)
+(✅ Machine code for:
+   - isLeapYear()
+   - Apptime_gettimestamp()  
+   - Apptimer_performtimesync()
+   - etc.
+
+✅ Symbol table (metadata):
+   Function names → memory addresses
+   "I have these functions available"
+   ❌ No main() - cant execute directly
+   ❌ Not linked - addresses are placeholders)
+
+// .c files are text → ar cannot read them
+// .o files are binary → ar packages them perfectly
+
+// 1. Preprocessor: #include, #define → clean C code
+// 2. Compiler: C code → assembly code  
+// 3. Assembler: assembly → machine code + symbols
+// ↓
+// timesync.o created!
+
+
+Step 5: Create static library
+bash
+ar rcs libtimesync.a timesync.o
+Result: libtimesync.a appears 
+
+Step 6: Test the library
+Create test.c:
+
